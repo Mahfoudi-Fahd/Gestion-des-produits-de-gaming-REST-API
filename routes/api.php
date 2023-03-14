@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,3 +43,8 @@ Route::group(['controller' => ResetPasswordController::class], function (){
          return $token;
      })->middleware('guest')->name('password.reset');
 });
+
+
+// update profile 
+
+Route::put('user/{user}', [ProfileController::class, 'updateProfile']);
