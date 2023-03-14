@@ -15,7 +15,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products=Product::with('category')->with('user')->get();
+
+        return response()->json([
+            'message'=>'All products :',
+             'Products'=>$products
+        ]);
     }
 
     /**
@@ -36,20 +41,19 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $category=Product::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'price' => $request->price,
-            'content' => $request->content,
-            'user_id' => auth()->user()->id,
-            'category_id' => $request->category_id,
+        $product = Product::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'content' => $request->input('content'),
+            'user_id' => auth()->user()->id, // assuming the user is authenticated
+            'category_id' => $request->input('category_id'),
         ]);
-        $category->category;
-        $category->user;
+
         return response()->json([
-            'message' => 'The category is succefully added !',
-            'Product' => $category
-        ], 201);
+            'message' => 'Product created successfully',
+            'product' => $product,
+        ]);
     }
 
     /**
@@ -81,9 +85,20 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(StoreProductRequest $request, Product $product)
     {
-        //
+        $product->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'content' => $request->input('content'),
+            'category_id' => $request->input('category_id'),
+        ]);
+
+        return response()->json([
+            'message' => 'Product updated successfully',
+            'product' => $product,
+        ]);
     }
 
     /**

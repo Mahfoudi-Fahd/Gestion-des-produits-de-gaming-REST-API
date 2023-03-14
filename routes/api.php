@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Models\Category;
@@ -56,3 +57,7 @@ Route::put('user/{user}', [ProfileController::class, 'updateProfile']);
 // Category Route 
 
 Route::apiResource('categories', CategoryController::class);
+
+// Products Route
+Route::middleware('auth:sanctum')->apiResource('products', ProductController::class);
+// Route::middleware('auth:sanctum')->post('/products', [ProductController::class, 'store']);
