@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -48,3 +50,9 @@ Route::group(['controller' => ResetPasswordController::class], function (){
 // update profile 
 
 Route::put('user/{user}', [ProfileController::class, 'updateProfile']);
+
+
+
+// Category Route 
+
+Route::apiResource('categories', CategoryController::class);
