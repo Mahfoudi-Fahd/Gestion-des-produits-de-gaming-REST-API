@@ -56,8 +56,21 @@ Route::put('user/{user}', [ProfileController::class, 'updateProfile']);
 
 // Category Route 
 
-Route::apiResource('categories', CategoryController::class);
+// Route::apiResource('categories', CategoryController::class);
+
+
+Route::group(['controller' => CategoryController::class, 'prefix' => '/categories','middleware'=>'auth:sanctum'], function () {
+    Route::get('', 'index')->middleware(['permission:view category']);
+    Route::post('', 'store')->middleware(['permission:add category']);
+    Route::get('/{category}', 'show')->middleware(['permission:view category']);
+    Route::put('/{category}', 'update')->middleware(['permission:edit category']);
+    Route::delete('/{category}', 'destroy')->middleware(['permission:delete category']);
+    // Route::get('getProductsByCategoryName/{category}', 'getProductsByCategoryName');
+});
+
+
 
 // Products Route
+
 Route::middleware('auth:sanctum')->apiResource('products', ProductController::class);
 // Route::middleware('auth:sanctum')->post('/products', [ProductController::class, 'store']);
