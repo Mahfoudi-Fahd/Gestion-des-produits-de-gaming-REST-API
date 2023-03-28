@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
@@ -71,6 +73,37 @@ Route::group(['controller' => CategoryController::class, 'prefix' => '/categorie
 
 
 // Products Route
+Route::group(['controller' => ProductController::class, 'prefix' => '/products','middleware'=>'auth:sanctum'], function () {
+    Route::post('', 'store')->middleware(['permission:add product']);
+    Route::put('/{product}', 'update')->middleware(['permission:edit All products|edit My product']);
+    Route::delete('/{product}', 'destroy')->middleware(['permission:delete All products|delete My product']);
+});
 
-Route::middleware('auth:sanctum')->apiResource('products', ProductController::class);
-// Route::middleware('auth:sanctum')->post('/products', [ProductController::class, 'store']);
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products', 'index');
+    Route::get('/products/{product}', 'show');
+});
+
+
+Route::group(['controller' => RoleController::class, 'prefix' => 'roles','middleware'=>'auth:sanctum'], function () {
+    Route::get('', 'index')->middleware(['permission:view role']);
+    Route::post('', 'store')->middleware(['permission:add role']);
+    Route::get('/{role}', 'show')->middleware(['permission:view role']);
+    Route::put('/{role}', 'update')->middleware(['permission:edit role']);
+});
+
+
+
+
+Route::group(['controller' => PermissionController::class , 'middleware'=>'auth:sanctum'],function(){
+    Route::post('give-permission/{role}', 'givePermissionToRole')->middleware('permission:give permission');
+Route::delete('remove-permission/{role}','removePermissionFromRole')->middleware('permission:remove permission');
+});
+
+
+// Roles
+Route::group(['controller' => RoleController::class , 'middleware'=>'auth:sanctum'], function()
+{
+    Route::post('give-role/{id}', 'assignRole')->middleware('permission:give role');
+    Route::post('remove-role/{id}', 'removeRole')->middleware('permission:remove role');
+});
