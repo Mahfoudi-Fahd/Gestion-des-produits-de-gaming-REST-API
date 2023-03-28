@@ -58,6 +58,20 @@ class CategoryController extends Controller
         
      }
 
+
+     public function getProductsByCategoryName($name)
+    {
+        $category = Category::where('name', $name)->first();
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+        $products = $category->products;
+        return response()->json($products);
+    }
+
+
+
+
      public function destroy(Category $category)
     {
        
